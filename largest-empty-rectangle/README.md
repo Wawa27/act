@@ -26,3 +26,10 @@ J'ai dabbord essayer de prendre le point au milieu afin de découper les plan en
 lorsque le plus grand rectangle se situé dans les deux plans résultant. C'est pourquoi j'ai dabbord parcouru les points
 afin de trouver le point le plus petit pour decouper les plans depuis se point.
 
+# Q5
+
+J'ai transformé l'agorithme "diviser pour régner" pour pouvoir utiliser toute les capacités du processeur avec la classe
+Future de Java.
+
+Pour les cas ou l'on a pas beaucoup le points, l'algorithme de base est plus rapide, mais sinon, l'algorithme parralèle
+va jusqu'à 20x plus vite.

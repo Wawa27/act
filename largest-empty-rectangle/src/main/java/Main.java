@@ -1,10 +1,7 @@
 import com.google.gson.Gson;
 import models.Dataset;
 import models.Point;
-import strategies.DivideAndConquerRectangleFinder;
-import strategies.LargestRectangleFinderStrategy;
-import strategies.LinearRectangleFinder;
-import strategies.NaiveLargestRectangleFinder;
+import strategies.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +13,8 @@ public class Main {
     public static void main(String... args) throws IOException {
         List<LargestRectangleFinderStrategy> strategies = new ArrayList<>();
         strategies.add(new NaiveLargestRectangleFinder());
+        strategies.add(new DivideAndConquerRectangleFinder());
+        strategies.add(new ParallelDivideAndConquerRectangleFinder());
 
         File directory = new File(args[0]);
         for (File file : Objects.requireNonNull(directory.listFiles())) {
