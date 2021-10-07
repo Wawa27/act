@@ -2,6 +2,8 @@ package strategies;
 
 import models.Board;
 
+import java.util.ArrayList;
+
 public class RecursiveConfigurationEvaluator implements ConfigurationEvaluatorStrategy {
 
     public RecursiveConfigurationEvaluator() {
@@ -9,34 +11,32 @@ public class RecursiveConfigurationEvaluator implements ConfigurationEvaluatorSt
 
     @Override
     public int evaluate(Board board) {
+        if (board.canCurrentPlayerWin()) {
+            return board.getCurrentPlayerCharacter() == 'P' ? -1 : 1;
+        }
+
+        ArrayList<Integer> successors = new ArrayList<>();
+        // Find all playable pawn
         for (int y = 0; y < board.getCells().length; y++) {
             for (int x = 0; x < board.getRow(y).length; x++) {
-                char currentPlayerCharacter = board.getCurrentPlayerCharacter();
-                char otherPlayerCharacter = currentPlayerCharacter == 'P' ? 'p' : 'P';
-                int yLookUp = y + currentPlayerCharacter == 'P' ? -1 : 1;
+                // Restrict to current player's turn's pawns
+                if (board.getCell(x, y) == board.getCurrentPlayerCharacter()) {
+                    int destinationY = y + (board.getCurrentPlayerCharacter() == 'P' ? -1 : 1);
 
-                if (board.getCell(x, y) == currentPlayerCharacter) {
-                    // Borders safety
-                    int minXLookUp = Math.min(x - 1, 0);
-                    int maxXLookUp = Math.max(x + 1, board.getRow(y).length);
-
-                    for (int xLookUp = minXLookUp; xLookUp < maxXLookUp; xLookUp++) {
+                    // All possible pawn's move (even not allowed ones)
+                    for (int destinationX = x - 1; destinationX < x + 1; destinationX++) {
                         // Only allow diagonal captures or forward move
-                        if (board.getCell(xLookUp, yLookUp) == otherPlayerCharacter &&
-                                xLookUp != x || board.getCell(x, y) == ' ' && xLookUp == x) {
-                            if (currentPlayerCharacter == 'P' && yLookUp == 0) {
-                                return 1;
-                            } else if (currentPlayerCharacter == 'p' && yLookUp == board.getCells().length - 1) {
-                                return -1;
-                            }
-                            Board bordWithNewMove = new Board(board.getCells());
-                            bordWithNewMove.movePawn(x, y, xLookUp, yLookUp);
+                        if (board.isAllowedMove(x, y, destinationX, destinationY)) {
+                            Board bordWithNewMove = new Board(board.getCells(), board.getOtherPlayerCharacter());
+                            bordWithNewMove.movePawn(x, y, destinationX, destinationY);
 
-                            int evaluation = evaluate(board) + Math.copySign() 1;
+                            successors.add(evaluate(bordWithNewMove));
                         }
                     }
                 }
             }
         }
+
+        return this.getConfigurationValue(successors);
     }
 }
