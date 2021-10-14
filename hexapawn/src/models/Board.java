@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Arrays;
+
 public class Board {
     private char[][] cells;
     private char currentPlayerCharacter;
@@ -24,10 +26,15 @@ public class Board {
      * @return True if current player can win, false otherwise
      */
     public boolean canCurrentPlayerWin() {
+        // FIXME: Win with take
         if (this.currentPlayerCharacter == 'p') {
             int beforeLastRow = this.cells.length - 2;
             for (int i = 0; i < this.cells[beforeLastRow].length; i++) {
                 if (this.isAllowedMove(i, beforeLastRow, i, beforeLastRow + 1)) {
+                    return true;
+                } else if (this.isAllowedMove(i, beforeLastRow, i - 1, beforeLastRow + 1)) {
+                    return true;
+                } else if (this.isAllowedMove(i, beforeLastRow, i + 1, beforeLastRow + 1)) {
                     return true;
                 }
             }
@@ -35,11 +42,19 @@ public class Board {
             for (int i = 0; i < this.cells[1].length; i++) {
                 if (this.isAllowedMove(i, 1, i, 0)) {
                     return true;
+                } else if (this.isAllowedMove(i, 1, i - 1, 0)) {
+                    return true;
+                } else if (this.isAllowedMove(i, 1, i + 1, 0)) {
+                    return true;
                 }
             }
         }
 
         return false;
+    }
+
+    public int getCurrentPlayerDestination() {
+        return this.currentPlayerCharacter == 'P' ? -1 : 1;
     }
 
     public char getCurrentPlayerCharacter() {

@@ -3,6 +3,7 @@ import strategies.ConfigurationEvaluatorStrategy;
 import strategies.RecursiveConfigurationEvaluator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {

@@ -12,7 +12,7 @@ public class RecursiveConfigurationEvaluator implements ConfigurationEvaluatorSt
     @Override
     public int evaluate(Board board) {
         if (board.canCurrentPlayerWin()) {
-            return board.getCurrentPlayerCharacter() == 'P' ? -1 : 1;
+            return 1;
         }
 
         ArrayList<Integer> successors = new ArrayList<>();
@@ -27,7 +27,7 @@ public class RecursiveConfigurationEvaluator implements ConfigurationEvaluatorSt
                     for (int destinationX = x - 1; destinationX < x + 1; destinationX++) {
                         // Only allow diagonal captures or forward move
                         if (board.isAllowedMove(x, y, destinationX, destinationY)) {
-                            Board bordWithNewMove = new Board(board.getCells(), board.getOtherPlayerCharacter());
+                            Board bordWithNewMove = new Board(cloneCells(board.getCells()), board.getOtherPlayerCharacter());
                             bordWithNewMove.movePawn(x, y, destinationX, destinationY);
 
                             successors.add(evaluate(bordWithNewMove));
@@ -37,6 +37,6 @@ public class RecursiveConfigurationEvaluator implements ConfigurationEvaluatorSt
             }
         }
 
-        return this.getConfigurationValue(successors);
+        return this.computeConfigurationValue(successors);
     }
 }
