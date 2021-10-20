@@ -2,25 +2,33 @@ package strategies;
 
 import models.Board;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public interface ConfigurationEvaluatorStrategy {
+
     /**
      * Calculate the configuration value from the board's successors
      * Implementation of question°1
      */
     default int computeConfigurationValue(List<Integer> successors) {
+        // No legal moves means the current player lose
+        if (successors.size() == 0) {
+            return 0;
+        }
+
         if (Collections.min(successors) > 0) {
             return -1 * (Collections.max(successors) + 1);
         } else {
             // We want to win the fastest as possible, so we take the nearest number to 0
-            for (int i = successors.size() - 1; i >= 0; i--) {
-                if (successors.get(i) > 0) {
-                    successors.remove(i);
+            List<Integer> winningSuccessors = new ArrayList<>();
+            for (Integer integer : successors) {
+                if (integer <= 0) {
+                    winningSuccessors.add(integer);
                 }
             }
-            return -1 * (Collections.max(successors) - 1);
+            return -1 * (Collections.max(winningSuccessors) - 1);
         }
     }
 

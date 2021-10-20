@@ -1,4 +1,5 @@
 import models.Board;
+import strategies.CachedRecursiveConfigurationEvaluator;
 import strategies.ConfigurationEvaluatorStrategy;
 import strategies.RecursiveConfigurationEvaluator;
 
@@ -33,11 +34,13 @@ public class Main {
         System.out.println("board = " + board);
 
         ArrayList<ConfigurationEvaluatorStrategy> strategies = new ArrayList<>();
-        strategies.add(new RecursiveConfigurationEvaluator());
+        strategies.add(new CachedRecursiveConfigurationEvaluator());
 
         for (ConfigurationEvaluatorStrategy strategy : strategies) {
+            long start = System.nanoTime();
             System.out.println("strategy = " + strategy.getClass().getSimpleName());
             System.out.println("strategy = " + strategy.evaluate(board));
+            System.out.println("Resolved in : " + (System.nanoTime() - start) / 1e9f + "s");
         }
     }
 }

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Board {
     private char[][] cells;
-    private char currentPlayerCharacter;
+    private final char currentPlayerCharacter;
 
     public Board(char[][] cells) {
         this(cells, 'P');
@@ -26,7 +26,6 @@ public class Board {
      * @return True if current player can win, false otherwise
      */
     public boolean canCurrentPlayerWin() {
-        // FIXME: Win with take
         if (this.currentPlayerCharacter == 'p') {
             int beforeLastRow = this.cells.length - 2;
             for (int i = 0; i < this.cells[beforeLastRow].length; i++) {
@@ -65,10 +64,6 @@ public class Board {
         return currentPlayerCharacter == 'P' ? 'p' : 'P';
     }
 
-    public void setCurrentPlayerCharacter(char currentPlayerCharacter) {
-        this.currentPlayerCharacter = currentPlayerCharacter;
-    }
-
     public boolean isAllowedMove(int sourceX, int sourceY, int destinationX, int destinationY) {
         if (destinationY < 0 || destinationY >= this.cells.length) {
             return false;
@@ -94,5 +89,40 @@ public class Board {
 
     public void setCells(char[][] cells) {
         this.cells = cells;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char[] row : cells) {
+            stringBuilder.append(row);
+        }
+        return stringBuilder.toString();
+    }
+
+    public String toStringYAxisMirrored() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char[] row : cells) {
+            StringBuilder reverse = new StringBuilder().append(row).reverse();
+            stringBuilder.append(reverse);
+        }
+        return stringBuilder.toString();
+    }
+
+    public String toStringXAxisMirrored() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = cells.length - 1; i >= 0; i--) {
+            stringBuilder.append(cells[i]);
+        }
+        return stringBuilder.toString();
+    }
+
+    public String toStringXYAxisMirrored() {
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder reverseBuilder = new StringBuilder();
+        for (int i = cells.length - 1; i >= 0; i--) {
+            stringBuilder.append(reverseBuilder.insert(0, cells[i]).reverse());
+        }
+        return stringBuilder.toString();
     }
 }
