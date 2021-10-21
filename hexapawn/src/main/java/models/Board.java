@@ -110,19 +110,14 @@ public class Board {
     }
 
     public String toStringXAxisMirrored() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = cells.length - 1; i >= 0; i--) {
-            stringBuilder.append(cells[i]);
-        }
-        return stringBuilder.toString();
+        String tmp = toString().replaceAll("p", "k");
+        tmp = tmp.replaceAll("P", "p");
+        return tmp.replaceAll("k", "P");
     }
 
     public String toStringXYAxisMirrored() {
-        StringBuilder stringBuilder = new StringBuilder();
-        StringBuilder reverseBuilder = new StringBuilder();
-        for (int i = cells.length - 1; i >= 0; i--) {
-            stringBuilder.append(reverseBuilder.insert(0, cells[i]).reverse());
-        }
-        return stringBuilder.toString();
+        String tmp = toStringYAxisMirrored().replaceAll("p", "k");
+        tmp = tmp.replaceAll("P", "p");
+        return tmp.replaceAll("k", "P");
     }
 }

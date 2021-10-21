@@ -16,21 +16,35 @@ public class DivideAndConquerRectangleFinder implements LargestRectangleFinderSt
             );
         }
 
-        // Check the area of the shortest point
+        // Find index of the shortest point
         Point shortestPoint = points[0];
         int shortestPointIndex = 0;
-        for (int i = 0, pointsLength = points.length; i < pointsLength; i++) {
+        int sameShortestHeight = 0;
+        for (int i = 0; i < points.length; i++) {
             Point p = points[i];
             if (shortestPoint.getY() > p.getY()) {
                 shortestPoint = p;
                 shortestPointIndex = i;
+                sameShortestHeight = 0;
             }
+
+            if (shortestPoint.getY() == p.getY()) {
+                shortestPoint = p;
+                shortestPointIndex = i;
+                sameShortestHeight++;
+            } else {
+                sameShortestHeight = 0;
+            }
+        }
+
+        if (sameShortestHeight != 0) {
+            shortestPointIndex = shortestPointIndex - sameShortestHeight / 2;
         }
 
         // Make a rectangle of the whole plane up to the shortest point
         int biggestRectangleArea = RectangleUtils.calculateArea(
                 new Point(plane.getX(), 0),
-                new Point(plane.getWidth() + plane.getX(), shortestPoint.getY())
+                new Point(plane.getX() + plane.getWidth(), shortestPoint.getY())
         );
 
         if (points.length == 1) {
@@ -54,8 +68,8 @@ public class DivideAndConquerRectangleFinder implements LargestRectangleFinderSt
         Point[] leftPoints = new Point[shortestPointIndex];
         System.arraycopy(points, 0, leftPoints, 0, leftPoints.length);
 
+        Plane rightPlane = new Plane(plane.getWidth() + plane.getX() - shortestPoint.getX(), plane.getHeight(), shortestPoint.getX(), 0);
         Point[] rightPoints = new Point[points.length - shortestPointIndex - 1];
-        Plane rightPlane = new Plane(plane.getWidth() - shortestPoint.getX(), plane.getHeight(), points[shortestPointIndex].getX(), 0);
         System.arraycopy(points, shortestPointIndex + 1, rightPoints, 0, rightPoints.length);
 
         int leftBiggestRectangleArea = new DivideAndConquerRectangleFinder().find(leftPlane, leftPoints);

@@ -5,6 +5,7 @@ import models.Board;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CachedRecursiveConfigurationEvaluator implements ConfigurationEvaluatorStrategy {
 
@@ -18,10 +19,11 @@ public class CachedRecursiveConfigurationEvaluator implements ConfigurationEvalu
 
     private int evaluateWithCache(Board board, Map<String, Integer> whitePlayerCache, Map<String, Integer> blackPlayerCache) {
         // Exit conditions, first check in cache before any high cost checks
-        if (board.getCurrentPlayerCharacter() == 'P' && whitePlayerCache.get(board.toString()) != null) {
-            return whitePlayerCache.get(board.toString());
-        } else if (board.getCurrentPlayerCharacter() == 'p' && blackPlayerCache.get(board.toString()) != null) {
-            return blackPlayerCache.get(board.toString());
+        String boardString = board.toString();
+        if (board.getCurrentPlayerCharacter() == 'P' && whitePlayerCache.get(boardString) != null) {
+            return whitePlayerCache.get(boardString);
+        } else if (board.getCurrentPlayerCharacter() == 'p' && blackPlayerCache.get(boardString) != null) {
+            return blackPlayerCache.get(boardString);
         } else if (board.canCurrentPlayerWin()) {
             return 1;
         }
@@ -52,17 +54,14 @@ public class CachedRecursiveConfigurationEvaluator implements ConfigurationEvalu
             }
         }
 
-        int configurationValue = computeConfigurationValue(successors);
+        int currentPlayerConfigurationValue = computeConfigurationValue(successors);
 
         // Cache results
-        // Make a Y mirrored version of the board and 
         if (board.getCurrentPlayerCharacter() == 'P') {
-            whitePlayerCache.put(board.toString(), configurationValue);
-            whitePlayerCache.put(board.toStringYAxisMirrored(), configurationValue);
+            whitePlayerCache.put(boardString, currentPlayerConfigurationValue);
         } else {
-            blackPlayerCache.put(board.toString(), configurationValue);
-            blackPlayerCache.put(board.toStringYAxisMirrored(), configurationValue);
+            blackPlayerCache.put(boardString, currentPlayerConfigurationValue);
         }
-        return configurationValue;
+        return currentPlayerConfigurationValue;
     }
 }
