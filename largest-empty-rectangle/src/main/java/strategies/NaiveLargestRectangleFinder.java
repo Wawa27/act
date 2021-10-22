@@ -8,18 +8,21 @@ public class NaiveLargestRectangleFinder implements LargestRectangleFinderStrate
 
     @Override
     public int find(Plane plane, Point[] points) {
+        if (points.length == 0) {
+            return plane.getWidth() * plane.getHeight();
+        }
         int currentBiggestRectangleArea = 0;
         Point shortestPoint = points[0];
 
-        for (int i = 0; i < points.length - 1; i++) {
+        for (int i = 0; i < points.length; i++) {
             Point firstPoint = points[i];
             if (firstPoint.getY() < shortestPoint.getY()) {
                 shortestPoint = firstPoint;
             }
 
+            // Start at i + 1 to avoid picking the same point twice and avoid duplicate rectangles
             for (int j = i + 1; j < points.length; j++) {
                 Point secondPoint = points[j];
-                // Avoid picking the same point twice and avoid duplicate rectangles
                 int maxHeight = plane.getHeight();
 
                 // Loop trough all points between the first one and the second one
